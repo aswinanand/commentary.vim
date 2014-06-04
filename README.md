@@ -12,7 +12,9 @@ be of help.
 
 Pathogen is the easiest way to install this plugin. Just go to 
 `~/.vim/bundle` and run:
-`git clone https://github.com/aswinanand/commentary.vim.git` 
+```
+git clone https://github.com/aswinanand/commentary.vim.git
+```
 or add it as a git submodule.
 
 ## Usage
