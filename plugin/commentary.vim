@@ -7,47 +7,57 @@ let g:commentary_plugin_loaded = 1
 let s:savecpo = &cpo
 set cpo&vim
 
+function! s:cmt(fl, ll, char)
+    execute a:fl . ',' . a:ll . 's:^:' . a:char . ':e'
+    if (a:fl != a:ll)
+        call feedkeys("\<cr>")
+    endif
+    noh
+    echo ''
+endfunction
+
+function! s:uncmt(fl, ll, char)
+    execute a:fl . ',' . a:ll . 's:' . a:char . '::e'
+    if (a:fl != a:ll)
+        call feedkeys("\<cr>")
+    endif
+    noh
+    echo ''
+endfunction
+
 function! s:Commentary() range
     let ft = &filetype
 
     if (ft ==# "javascript" || ft ==# "php" || ft ==# "c" || ft ==# "cpp" || ft ==# "java")
-        execute a:firstline . ',' . a:lastline . 's:^://:g'
-        noh
+        call <SID>cmt(a:firstline, a:lastline, '//')
     endif
 
     if (ft ==# "ruby" || ft ==# "perl" || ft ==# "sh" || ft ==# "apache")
-        execute a:firstline . ',' . a:lastline . 's:^:#:g'
-        noh
+        call <SID>cmt(a:firstline, a:lastline, '#')
     endif
 
     if (ft ==# "vim")
-        execute a:firstline . ',' . a:lastline . 's:^:":g'
-        noh
+        call <SID>cmt(a:firstline, a:lastline, '"')
     endif
 
-    if (ft ==# "css")
+    if (ft ==# "css" || ft ==# "html")
+        let cs = '/*'
+        let ce = '*/'
+
+        if (ft ==# 'html')
+            let cs = '<!--'
+            let ce = '-->'
+        endif
+
         call feedkeys(':' . a:firstline . "\<cr>")
         call feedkeys('I')
-        call feedkeys('/*')
+        call feedkeys(cs)
         call feedkeys("\<esc>")
         call feedkeys(':' . a:lastline . "\<cr>")
         call feedkeys('A')
-        call feedkeys('*/')
+        call feedkeys(ce)
         call feedkeys("\<esc>")
     endif
-
-    if (ft ==# "html")
-        call feedkeys(':' . a:firstline . "\<cr>")
-        call feedkeys('I')
-        call feedkeys('<!--')
-        call feedkeys("\<esc>")
-        call feedkeys(':' . a:lastline . "\<cr>")
-        call feedkeys('A')
-        call feedkeys('-->')
-        call feedkeys("\<esc>")
-    endif
-
-    echo ''
 
 endfunction
 
@@ -55,33 +65,33 @@ function! s:Uncommentary() range
     let ft = &filetype
 
     if (ft ==# "javascript" || ft ==# "php" || ft ==# "c" || ft ==# "cpp" || ft ==# "java")
-        execute a:firstline . ',' . a:lastline . 's://::e'
-        noh
+        call <SID>uncmt(a:firstline, a:lastline, '//')
     endif
 
     if (ft ==# "ruby" || ft ==# "perl" || ft ==# "sh" || ft ==# "apache")
-        execute a:firstline . ',' . a:lastline . 's:#::e'
-        noh
+        call <SID>uncmt(a:firstline, a:lastline, '#')
     endif
 
     if (ft ==# "vim")
-        execute a:firstline . ',' . a:lastline . 's:"::e'
-        noh
+        call <SID>uncmt(a:firstline, a:lastline, '"')
     endif
 
-    if (ft ==# "css")
-        execute a:firstline . ',' . a:firstline . 's:/\*::e'
-        execute a:lastline . ',' . a:lastline . 's:.*\zs\*/::e'
-        noh
-    endif
+    if (ft ==# "css" || ft ==# "html")
+        let cs = '/\*'
+        let ce = '.*\zs\*/'
 
-    if (ft ==# "html")
-        execute a:firstline . ',' . a:firstline . 's:<!--::e'
-        execute a:lastline . ',' . a:lastline . 's:.*\zs-->::e'
-        noh
-    endif
+        if (ft ==# 'html')
+            let cs = '<!--'
+            let ce = '-->'
+        endif
 
-    echo ''
+        let ln = a:firstline
+        while ln < (a:lastline + 1)
+            call <SID>uncmt(ln, ln, cs)
+            call <SID>uncmt(ln, ln, ce)
+            let ln = ln + 1
+        endwhile
+    endif
 
 endfunction
 
