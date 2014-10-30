@@ -59,6 +59,18 @@ function! s:Commentary() range
         call feedkeys("\<esc>")
     endif
 
+    if (ft ==# "haml")
+        let ln = a:firstline
+        while ln < (a:lastline + 1)
+            call feedkeys(':' . ln . "\<cr>")
+            call feedkeys('I')
+            call feedkeys('/')
+            call feedkeys("\<esc>")
+            let ln = ln + 1
+        endwhile
+        echo ''
+    endif
+
 endfunction
 
 function! s:Uncommentary() range
@@ -91,6 +103,19 @@ function! s:Uncommentary() range
             call <SID>uncmt(ln, ln, ce)
             let ln = ln + 1
         endwhile
+    endif
+
+    if (ft ==# "haml")
+        let ln = a:firstline
+        while ln < (a:lastline + 1)
+            call feedkeys(':' . ln . "\<cr>")
+            if ( getline(ln) =~# '\s\+\/' )
+                call feedkeys('^')
+                call feedkeys('x')
+            endif
+            let ln = ln + 1
+        endwhile
+        echo ''
     endif
 
 endfunction
