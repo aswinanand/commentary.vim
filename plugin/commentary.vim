@@ -64,7 +64,7 @@ function! s:Commentary() range
         while ln < (a:lastline + 1)
             call feedkeys(':' . ln . "\<cr>")
             call feedkeys('I')
-            call feedkeys('/')
+            call feedkeys('-#')
             call feedkeys("\<esc>")
             let ln = ln + 1
         endwhile
@@ -109,9 +109,9 @@ function! s:Uncommentary() range
         let ln = a:firstline
         while ln < (a:lastline + 1)
             call feedkeys(':' . ln . "\<cr>")
-            if ( getline(ln) =~# '\s\+\/' )
+            if ( getline(ln) =~# '\s\+-#' )
                 call feedkeys('^')
-                call feedkeys('x')
+                call feedkeys('2x')
             endif
             let ln = ln + 1
         endwhile
@@ -120,8 +120,8 @@ function! s:Uncommentary() range
 
 endfunction
 
-command! -nargs=* -range Commentary   <line1>,<line2>call <SID>Commentary()
-command! -nargs=* -range Uncommentary <line1>,<line2>call <SID>Uncommentary()
+command! -nargs=* -bar -range Commentary   <line1>,<line2>call <SID>Commentary()
+command! -nargs=* -bar -range Uncommentary <line1>,<line2>call <SID>Uncommentary()
 
 let &cpo = s:savecpo
 unlet s:savecpo
