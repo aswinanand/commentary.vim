@@ -109,9 +109,9 @@ function! s:Uncommentary() range
         let ln = a:firstline
         while ln < (a:lastline + 1)
             call feedkeys(':' . ln . "\<cr>")
-            if ( getline(ln) =~# '\s\+-#' )
+            if ( getline(ln) =~# "\s\*-#" )
                 call feedkeys('^')
-                call feedkeys('2x')
+                call feedkeys("2x")
             endif
             let ln = ln + 1
         endwhile
