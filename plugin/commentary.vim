@@ -32,7 +32,7 @@ function! s:Commentary() range
         call <SID>cmt(a:firstline, a:lastline, '//')
     endif
 
-    if (ft ==# "ruby" || ft ==# "perl" || ft ==# "sh" || ft ==# "apache" || ft ==# "sshconfig" || ft ==# "gitconfig")
+    if (ft ==# "ruby" || ft ==# "perl" || ft ==# "sh" || ft ==# "apache" || ft ==# "sshconfig" || ft ==# "gitconfig" || ft ==# "python")
         call <SID>cmt(a:firstline, a:lastline, '#')
     endif
 
@@ -80,7 +80,7 @@ function! s:Uncommentary() range
         call <SID>uncmt(a:firstline, a:lastline, '//')
     endif
 
-    if (ft ==# "ruby" || ft ==# "perl" || ft ==# "sh" || ft ==# "apache" || ft ==# "sshconfig" || ft ==# "gitconfig")
+    if (ft ==# "ruby" || ft ==# "perl" || ft ==# "sh" || ft ==# "apache" || ft ==# "sshconfig" || ft ==# "gitconfig" || ft ==# "python")
         call <SID>uncmt(a:firstline, a:lastline, '#')
     endif
 
